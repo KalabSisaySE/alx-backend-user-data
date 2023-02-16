@@ -48,3 +48,16 @@ class DB:
         if user:
             return user
         raise NoResultFound
+
+    def update_user(self, user_id, **kwargs):
+        """updates the user with the given `user_id`"""
+        if user_id:
+            session = self._session
+            user = self.find_user_by(**kwargs)
+            attr_list = [
+                "email", "hashed_password", "session_id", "reset_token"
+            ]
+            for key, value in kwargs.items():
+                if key not in attr_list:
+                    raise ValueError
+                setattr(user, key, value)

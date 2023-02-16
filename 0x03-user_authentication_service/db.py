@@ -38,7 +38,7 @@ class DB:
         session.commit()
         return new_user
 
-    def find_user_by(self, **kwargs: str) -> User:
+    def find_user_by(self, **kwargs: dict) -> User:
         """searches for an entry in the database using `keyword_str`"""
         session = self._session
         attr_list = ["email", "hashed_password", "session_id", "reset_token"]

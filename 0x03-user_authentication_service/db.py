@@ -49,9 +49,9 @@ class DB:
             return user
         raise NoResultFound
 
-    def update_user(self, user_id, **kwargs):
+    def update_user(self, user_id: int, **kwargs: dict) -> None:
         """updates the user with the given `user_id`"""
-        if user_id:
+        if user_id and type(user_id) is int:
             session = self._session
             user = self.find_user_by(**kwargs)
             attr_list = [

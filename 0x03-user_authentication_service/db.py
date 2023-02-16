@@ -6,7 +6,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.exc import NoResultFound
 from user import Base
 from user import User
 
@@ -36,3 +37,13 @@ class DB:
         session.add(new_user)
         session.commit()
         return new_user
+
+    def find_user_by(self, **kwargs: str) -> User:
+        """searches for an entry in the database using `keyword_str`"""
+        session = self._session
+        if list(kwargs.keys())[0] not in ["email", "hashed_password"]:
+            raise InvalidRequestError
+        user = session.query(User).filter_by(**kwargs).first()
+        if user:
+            return user
+        raise NoResultFound

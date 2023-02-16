@@ -41,7 +41,8 @@ class DB:
     def find_user_by(self, **kwargs: str) -> User:
         """searches for an entry in the database using `keyword_str`"""
         session = self._session
-        if list(kwargs.keys())[0] not in ["email", "hashed_password"]:
+        attr_list = ["email", "hashed_password", "session_id", "reset_token"]
+        if list(kwargs.keys())[0] not in attr_list:
             raise InvalidRequestError
         user = session.query(User).filter_by(**kwargs).first()
         if user:

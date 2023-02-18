@@ -6,8 +6,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from sqlalchemy.exc import InvalidRequestError
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError, NoResultFound
+# from sqlalchemy.orm.exc import NoResultFound
 from user import Base
 from user import User
 
@@ -39,10 +39,12 @@ class DB:
         return new_user
 
     def find_user_by(self, **kwargs: dict) -> User:
-        """searches for an entry in the database using `keyword_str`"""
+        """searches for an entry in the database using `kwargs`"""
         session = self._session
-        attr_list = ["email", "hashed_password", "session_id", "reset_token"]
-        if list(kwargs.keys())[0] not in attr_list:
+        attr_list = [
+            "id", "email", "hashed_password", "session_id", "reset_token"
+        ]
+        if list(kwargs.keys())[-1] not in attr_list:
             raise InvalidRequestError
         user = session.query(User).filter_by(**kwargs).first()
         if user:
@@ -53,11 +55,12 @@ class DB:
         """updates the user with the given `user_id`"""
         if user_id and type(user_id) is int:
             session = self._session
-            user = self.find_user_by(**kwargs)
+            user = self.find_user_by(id=user_id)
             attr_list = [
-                "email", "hashed_password", "session_id", "reset_token"
+                "id", "email", "hashed_password", "session_id", "reset_token"
             ]
             for key, value in kwargs.items():
                 if key not in attr_list:
                     raise ValueError
                 setattr(user, key, value)
+            session.commit()

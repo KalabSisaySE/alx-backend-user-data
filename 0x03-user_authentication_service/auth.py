@@ -59,7 +59,7 @@ class Auth:
         finally:
             return session_id
 
-    def valid_login(self, email, password) -> bool:
+    def valid_login(self, email: str, password: str) -> bool:
         """checks if the given `password` is correct"""
         given_pass = bytes(password, "utf-8")
         try:

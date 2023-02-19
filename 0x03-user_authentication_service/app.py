@@ -35,6 +35,7 @@ def users():
 
 @app.route("/sessions", methods=["POST"])
 def login():
+    """saves login information using a session_id and stores it in a cookie"""
     email = request.form["email"]
     password = request.form["password"]
     if AUTH.valid_login(email, password):
@@ -47,6 +48,7 @@ def login():
 
 @app.route("/sessions", methods=["DELETE"])
 def logout():
+    """deletes the session of the logged in user"""
     session_id = request.cookies.get("session_id")
     if AUTH.get_user_from_session_id(session_id):
         user = AUTH.get_user_from_session_id(session_id)
@@ -58,6 +60,7 @@ def logout():
 
 @app.route("/profile")
 def profile():
+    """checks if the user is logged in and returns the email"""
     if request.cookies.get("session_id"):
         session_id = request.cookies.get("session_id")
         if AUTH.get_user_from_session_id(session_id):
@@ -68,6 +71,7 @@ def profile():
 
 @app.route("/reset_password", methods=['POST'])
 def get_reset_password_token():
+    """endpoint to get a password reset token"""
     email = request.form['email']
     try:
         reset_token = AUTH.get_reset_password_token(email)
@@ -80,6 +84,7 @@ def get_reset_password_token():
 
 @app.route('/reset_password', methods=['PUT'])
 def update_password():
+    """endpoint to update an existing password using a reset token"""
     try:
         AUTH.update_password(
             request.form['reset_token'],
@@ -95,7 +100,6 @@ def update_password():
         )
     except ValueError:
         abort(403)
-    return jsonify()
 
 
 if __name__ == "__main__":

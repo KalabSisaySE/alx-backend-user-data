@@ -5,6 +5,7 @@ defines the function `_hash_password`
 import bcrypt
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
+from typing import Union
 from uuid import uuid4
 from db import DB
 from user import User

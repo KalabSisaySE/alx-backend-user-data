@@ -51,7 +51,9 @@ def logout():
     if AUTH.get_user_from_session_id(session_id):
         user = AUTH.get_user_from_session_id(session_id)
         AUTH.destroy_session(session_id)
-        redirect("/")
+        return make_response(redirect("/"), 302)
+    else:
+        abort(403)
 
 
 if __name__ == "__main__":

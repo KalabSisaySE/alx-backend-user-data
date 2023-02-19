@@ -38,7 +38,7 @@ class DB:
         session.commit()
         return new_user
 
-    def find_user_by(self, **kwargs: dict) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """searches for an entry in the database using `kwargs`"""
         session = self._session
         attr_list = [

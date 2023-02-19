@@ -72,7 +72,6 @@ class Auth:
         """returns the user based on the given `session_id`"""
         if session_id:
             try:
-                user = self._db.find_user_by(session_id=session_id)
-                return user
+                return self._db.find_user_by(session_id=session_id)
             except (NoResultFound, InvalidRequestError):
                 return

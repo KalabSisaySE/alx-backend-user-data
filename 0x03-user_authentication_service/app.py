@@ -45,7 +45,7 @@ def login():
     abort(401)
 
 
-@aqpp.route("/sessions", methods=['POST'])
+@app.route("/sessions", methods=["DELETE"])
 def logout():
     session_id = request.form["session_id"]
     if AUTH.get_user_from_session_id(session_id):

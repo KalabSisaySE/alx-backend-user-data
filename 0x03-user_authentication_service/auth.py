@@ -67,3 +67,11 @@ class Auth:
             return bcrypt.checkpw(given_pass, user.hashed_password)
         except (NoResultFound, InvalidRequestError):
             return False
+
+    def get_user_from_session_id(self, session_id: str) -> Union[User, None]:
+        """returns the user based on the given `session_id`"""
+        try:
+            user = self._db.find_user_by(session_id=session_id)
+            return user
+        except (NoResultFound, InvalidRequestError):
+            return

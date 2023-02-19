@@ -3,7 +3,7 @@
 a basic Flask app
 """
 from auth import Auth
-from flask import Flask, jsonify, request, make_response, abort
+from flask import Flask, jsonify, request, make_response, abort, redirect
 
 
 app = Flask(__name__)
@@ -43,6 +43,15 @@ def login():
         resp.set_cookie("session_id", session_id)
         return resp
     abort(401)
+
+
+@aqpp.route("/sessions", methods=["DELETE"])
+def logout():
+    session_id = request.form["session_id"]
+    if AUTH.get_user_from_session_id(session_id):
+        user = AUTH.get_user_from_session_id(session_id)
+        AUTH.destroy_session(session_id)
+        redirect("/")
 
 
 if __name__ == "__main__":

@@ -86,7 +86,7 @@ def main():
             "my_db", logging.INFO, None, None, user, None, None
         )
         formatter = RedactingFormatter(PII_FIELDS)
-        formatter.format(user)
+        print(formatter.format(record))
 
 
 if __name__ == "__main__":

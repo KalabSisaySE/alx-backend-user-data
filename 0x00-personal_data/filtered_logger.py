@@ -51,4 +51,5 @@ def get_logger() -> logging.Logger:
     sh.setLevel(logging.INFO)
     sh.setFormatter(RedactingFormatter())
     logger.addHandler(sh)
+    logger.propagate = False
     return logger

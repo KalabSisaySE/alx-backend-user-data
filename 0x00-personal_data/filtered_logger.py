@@ -83,7 +83,7 @@ def main():
 
     for user in users:
         record = logging.LogRecord(
-            "my_db", logging.INFO, None, None, user, None, None
+            "user_data", logging.INFO, None, None, user, None, None
         )
         formatter = RedactingFormatter(PII_FIELDS)
         print(formatter.format(record))

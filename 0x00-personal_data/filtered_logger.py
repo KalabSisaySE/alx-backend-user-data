@@ -65,3 +65,28 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         user=os.getenv(key="PERSONAL_DATA_DB_USERNAME", default="root"),
         password=os.getenv(key="PERSONAL_DATA_DB_PASSWORD", default=""),
     )
+
+
+def main():
+    """retrieve users data from the database
+    and lists them in a formatted way"""
+    cursor = get_db().cursor()
+    cursor.execute("SELECT * FROM users;")
+    records = cursor.fetchall()
+    users = []
+    for record in records:
+        user = ""
+        for attr, value in zip(cursor.description, record):
+            user = user + "{}={};".format(attr, value)
+        users.append(user)
+
+    for user in users:
+        record = logging.LogRecord(
+            "my_db", logging.INFO, None, None, user, None, None
+        )
+        formatter = RedactingFormatter(PII_FIELDS)
+        formatter.format(user)
+
+
+if __name__ == "__main__":
+    main()

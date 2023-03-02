@@ -3,11 +3,13 @@
 defines the function `filter_datum`
 """
 import logging
+import mysql.connector
+import os
 import re
 from typing import List
 
 
-PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
 def filter_datum(
@@ -53,3 +55,13 @@ def get_logger() -> logging.Logger:
     logger.addHandler(sh)
     logger.propagate = False
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """returns a mysql connection object"""
+    return mysql.connect(
+        host=os.getenv(key="PERSONAL_DATA_DB_HOST", default="localhost"),
+        database=os.getenv("PERSONAL_DATA_DB_NAME"),
+        user=os.getenv(key="PERSONAL_DATA_DB_USERNAME", default="root"),
+        password=os.getenv(key="PERSONAL_DATA_DB_PASSWORD", default=""),
+    )

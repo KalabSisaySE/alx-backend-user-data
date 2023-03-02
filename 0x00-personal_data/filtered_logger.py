@@ -48,6 +48,7 @@ def get_logger() -> logging.Logger:
     """returns a logging.Logger object"""
     logger = logging.getLogger("user_data")
     sh = logging.StreamHandler()
+    sh.setLevel(logging.INFO)
     sh.setFormatter(RedactingFormatter())
     logger.addHandler(sh)
     return logger

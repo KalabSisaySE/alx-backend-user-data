@@ -70,14 +70,15 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
 def main():
     """retrieve users data from the database
     and lists them in a formatted way"""
-    cursor = get_db().cursor()
+    connection = get_db()
+    cursor = connection.cursor()
     cursor.execute("SELECT * FROM users;")
     records = cursor.fetchall()
     users = []
     for record in records:
         user = ""
         for attr, value in zip(cursor.description, record):
-            user = user + "{}={};".format(attr, value)
+            user = user + "{}={};".format(attr[0], value)
         users.append(user)
 
     for user in users:

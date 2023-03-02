@@ -4,10 +4,14 @@ defines the function `filter_datum`
 """
 import logging
 import re
-from typing import List, Tuple
+from typing import List
 
 
-logging.basicConfig(level=logging.INFO)
+fields = None
+with open("user_data.csv", "r") as file:
+    x = file.readline()
+    fields = x
+PII_FIELDS = tuple(fields.split(",")[:5])
 
 
 def filter_datum(
@@ -42,3 +46,12 @@ class RedactingFormatter(logging.Formatter):
         )
         record.msg = msg.replace(";", "; ")[:-1]
         return logging.Formatter(self.FORMAT).format(record=record)
+
+
+def get_logger() -> logging.Logger:
+    """returns a logging.Logger object"""
+    logger = logging.getLogger("user_data")
+    sh = logging.StreamHandler()
+    sh.setFormatter(RedactingFormatter())
+    logger.addHandler(sh)
+    return logger

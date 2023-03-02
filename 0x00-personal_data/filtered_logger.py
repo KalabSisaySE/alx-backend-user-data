@@ -2,8 +2,12 @@
 """the `filtered_logger` module
 defines the function `filter_datum`
 """
+import logging
 import re
-from typing import List
+from typing import List, Tuple
+
+
+logging.basicConfig(level=logging.INFO)
 
 
 def filter_datum(
@@ -17,3 +21,24 @@ def filter_datum(
             message,
         )
     return message
+
+
+class RedactingFormatter(logging.Formatter):
+    """Redacting Formatter class"""
+
+    REDACTION = "***"
+    FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
+    SEPARATOR = ";"
+
+    def __init__(self, fields: Tuple[str]):
+        """instantiates a new `RedactingFormatter` object"""
+        self.fields = list(fields)
+        super(RedactingFormatter, self).__init__(self.FORMAT)
+
+    def format(self, record: logging.LogRecord) -> str:
+        """formats the record according to the specified format"""
+        msg = filter_datum(
+            self.fields, self.REDACTION, record.getMessage(), self.SEPARATOR
+        )
+        record.msg = msg.replace(";", "; ")[:-1]
+        return logging.Formatter(self.FORMAT).format(record=record)

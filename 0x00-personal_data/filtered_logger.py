@@ -7,11 +7,7 @@ import re
 from typing import List
 
 
-fields = None
-with open("user_data.csv", "r") as file:
-    x = file.readline()
-    fields = x
-PII_FIELDS = tuple(fields.split(",")[:5])
+PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
 def filter_datum(

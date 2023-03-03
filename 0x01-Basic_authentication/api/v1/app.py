@@ -21,6 +21,7 @@ if auth:
 
 @app.before_request
 def filter():
+    """defines the type of authorization needed"""
     if auth:
         path = request.path
         excluded_path = [

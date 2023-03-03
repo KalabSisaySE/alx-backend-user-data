@@ -10,7 +10,7 @@ class Auth:
     """class for all authentication systems"""
 
     def require_auth(self, path: str, excluded_path: List[str]) -> bool:
-        """checks if auth is required"""
+        """checks if auth is required for the given `path`"""
         if path is None:
             return True
         if not excluded_path or len(excluded_path) == 0:
@@ -21,8 +21,9 @@ class Auth:
             return True
 
     def authorization_header(self, request=None) -> str:
-        """returns authorization header"""
-        return None
+        """returns authorization header's value if exists"""
+        if request and request.headers.get('Authorization'):
+            return request.headers.get('Authorization')
 
     def current_user(self, request=None) -> TypeVar("User"):
         """returns the current authorized user"""

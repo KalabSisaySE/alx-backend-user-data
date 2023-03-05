@@ -4,6 +4,7 @@ defines the class `Auth`
 """
 from flask import request
 from typing import List, TypeVar
+import re
 
 
 class Auth:
@@ -15,9 +16,13 @@ class Auth:
             return True
         if not excluded_path or len(excluded_path) == 0:
             return True
+
         if path in excluded_path or (path + "/") in excluded_path:
             return False
         else:
+            for ex_path in excluded_path:
+                if re.match(r"{}".format(ex_path), path):
+                    return False
             return True
 
     def authorization_header(self, request=None) -> str:

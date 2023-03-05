@@ -4,6 +4,7 @@ defines the class `BasicAuth`
 """
 import base64
 from api.v1.auth.auth import Auth
+from models.user import User
 
 
 class BasicAuth(Auth):
@@ -46,3 +47,16 @@ class BasicAuth(Auth):
                 return (user_data[0], user_data[1])
 
         return (None, None)
+
+    def user_object_from_credentials(self, user_email: str, user_pwd: str):
+        """returns a `User` instance based on `user_email`, `user_pwd`"""
+        if user_email and type(user_email) is str:
+            if user_pwd and type(user_pwd) is str:
+
+                User.load_from_file()  # load data from file
+                if User.count() > 0:  # User objects exists
+                    user = User.search({"email": user_email})
+                    if user:
+                        user = User(**(user[0].to_json(True)))
+                        if user.is_valid_password(user_pwd):
+                            return user

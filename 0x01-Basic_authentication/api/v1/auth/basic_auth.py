@@ -5,6 +5,7 @@ defines the class `BasicAuth`
 import base64
 from api.v1.auth.auth import Auth
 from models.user import User
+from typing import TypeVar
 
 
 class BasicAuth(Auth):
@@ -60,3 +61,16 @@ class BasicAuth(Auth):
                         user = User(**(user[0].to_json(True)))
                         if user.is_valid_password(user_pwd):
                             return user
+
+    def current_user(self, request=None) -> TypeVar("User"):
+        """returns the current user"""
+        auth_header = self.authorization_header(request)
+        encoded = self.extract_base64_authorization_header(auth_header)
+        decoded = self.decode_base64_authorization_header(
+            encoded
+        )
+        username_pass = self.extract_user_credentials(decoded)
+        user = self.user_object_from_credentials(
+            username_pass[0], username_pass[1]
+        )
+        return user

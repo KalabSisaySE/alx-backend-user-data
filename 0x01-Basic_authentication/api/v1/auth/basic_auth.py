@@ -44,6 +44,11 @@ class BasicAuth(Auth):
             and type(decoded_base64_authorization_header) is str
         ):
             if decoded_base64_authorization_header.find(":") != -1:
+                if decoded_base64_authorization_header.find(":") > 1:
+                    idx = decoded_base64_authorization_header.find(':')
+                    return (decoded_base64_authorization_header[:idx],
+                            decoded_base64_authorization_header[idx + 1:])
+
                 user_data = decoded_base64_authorization_header.split(":")
                 return (user_data[0], user_data[1])
 

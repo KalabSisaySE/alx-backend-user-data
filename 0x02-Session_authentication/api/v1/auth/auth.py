@@ -4,6 +4,7 @@ defines the class `Auth`
 """
 from flask import request
 from typing import List, TypeVar
+import os
 import re
 
 
@@ -34,3 +35,9 @@ class Auth:
     def current_user(self, request=None) -> TypeVar("User"):
         """returns the current authorized user"""
         return None
+
+    def session_cookie(self, request=None):
+        """returns the value of a cookie if it exists"""
+        if request:
+            cookie = request.cookies.get(os.getenv("SESSION_NAME"))
+            return cookie

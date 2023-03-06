@@ -37,9 +37,12 @@ def filter():
             "/api/v1/status/",
             "/api/v1/unauthorized/",
             "/api/v1/forbidden/",
+            "/api/v1/auth_session/login/"
         ]
         if auth.require_auth(path, excluded_path):
-            if not auth.authorization_header(request):
+            auth_header = auth.authorization_header(request)
+            session_cookie = auth.session_cookie(request)
+            if not auth_header and not session_cookie:
                 abort(401)
             if not auth.current_user(request):
                 abort(403)

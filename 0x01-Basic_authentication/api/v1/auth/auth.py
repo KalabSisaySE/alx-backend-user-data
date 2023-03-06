@@ -20,8 +20,9 @@ class Auth:
         if path in excluded_path or (path + "/") in excluded_path:
             return False
         else:
-            for ex_path in excluded_path:
-                if re.match(r"{}".format(ex_path), path):
+            for ex_p in excluded_path:
+                regex = ex_p[:ex_p.find("*")] + "." + ex_p[ex_p.find("*"):]
+                if re.match(r"{}".format(regex), path):
                     return False
             return True
 

@@ -17,11 +17,13 @@ auth = os.getenv("AUTH_TYPE")
 if auth:
     if auth == "basic_auth":
         from api.v1.auth.basic_auth import BasicAuth
-
         auth = BasicAuth()
     elif auth == "session_auth":
         from api.v1.auth.session_auth import SessionAuth
         auth = SessionAuth()
+    elif auth == "session_exp_auth":
+        from api.v1.auth.session_exp_auth import SessionExpAuth
+        auth = SessionExpAuth()
     else:
         from api.v1.auth.auth import Auth
         auth = Auth()
@@ -31,7 +33,6 @@ if auth:
 def filter():
     """defines the type of authorization needed"""
     if auth:
-        print(f"auth_type : {type(auth)}")
         path = request.path
         excluded_path = [
             "/api/v1/status/",
@@ -71,4 +72,4 @@ def forbidden(error):
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
     port = getenv("API_PORT", "5000")
-    app.run(host=host, port=port)
+    app.run(host=host, port=port, debug=True)

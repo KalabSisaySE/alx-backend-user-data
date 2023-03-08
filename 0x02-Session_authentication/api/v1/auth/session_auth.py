@@ -2,6 +2,7 @@
 """the session_auth module
 implements a session authentication
 """
+from flask import request
 from uuid import uuid4
 from typing import TypeVar
 from api.v1.auth.auth import Auth
@@ -31,3 +32,13 @@ class SessionAuth(Auth):
         session_id = auth.session_cookie(request=request)
         user_id = self.user_id_for_session_id(session_id=session_id)
         return User.get(user_id)
+
+    def destroy_session(self, request=None) -> bool:
+        """deletes the current session of a logged user"""
+        if request and self.session_cookie(request):
+            session_id = self.session_cookie(request)
+            user_id = self.user_id_for_session_id(session_id=session_id)
+            if user_id:
+                del self.user_id_by_session_id[session_id]
+                return True
+        return False

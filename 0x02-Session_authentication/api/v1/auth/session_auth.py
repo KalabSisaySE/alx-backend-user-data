@@ -3,7 +3,9 @@
 implements a session authentication
 """
 from uuid import uuid4
+from typing import TypeVar
 from api.v1.auth.auth import Auth
+from models.user import User
 
 
 class SessionAuth(Auth):
@@ -22,3 +24,10 @@ class SessionAuth(Auth):
         """retrieves the user's id for a given `session_id`"""
         if session_id and type(session_id) is str:
             return self.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None) -> TypeVar("User"):
+        """returns a user based on the session_id on the request's cookie"""
+        auth = Auth()
+        session_id = auth.session_cookie(request=request)
+        user_id = self.user_id_for_session_id(session_id=session_id)
+        return User.get(user_id)

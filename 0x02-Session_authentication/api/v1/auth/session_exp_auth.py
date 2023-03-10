@@ -12,10 +12,12 @@ class SessionExpAuth(SessionAuth):
     """adds expiration and storage on top of Session Authentication"""
 
     def __init__(self) -> None:
+        """instantiates a new SessionExpAuth object"""
         duration = os.getenv("SESSION_DURATION")
         self.session_duration = int(duration) if duration else 0
 
     def create_session(self, user_id: str = None) -> str:
+        """creates a new session with attributes"""
         session_id = super().create_session(user_id)
         if session_id:
             session_dictionary = {
@@ -26,6 +28,7 @@ class SessionExpAuth(SessionAuth):
         return session_id
 
     def user_id_for_session_id(self, session_id: str = None) -> str:
+        """returns the user_id if it is stored with the given `session_id`"""
         if session_id and session_id in self.user_id_by_session_id.keys():
             if "created_at" in self.user_id_by_session_id[session_id].keys():
                 first = self.user_id_by_session_id[session_id]["created_at"]

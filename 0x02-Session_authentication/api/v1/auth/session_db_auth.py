@@ -22,6 +22,8 @@ class SessionDBAuth(SessionExpAuth):
             return session_id
 
     def user_id_for_session_id(self, session_id: str = None) -> str:
+        """returns a user_id for a session_id from database
+        if session is not expired"""
         if session_id in self.user_id_by_session_id.keys():
             if "created_at" in self.user_id_by_session_id[session_id].keys():
                 first = self.user_id_by_session_id[session_id]["created_at"]

@@ -34,6 +34,11 @@ class SessionDBAuth(SessionExpAuth):
                     # if session is found
                     if len(sessions) > 0:
                         return sessions[0].user_id
+        elif self.user_id_by_session_id == {}:
+            sessions = UserSession.search({"session_id": session_id})
+            # if session is found
+            if len(sessions) > 0:
+                return sessions[0].user_id
 
     def destroy_session(self, request=None) -> bool:
         """deletes the current session from database and memory"""
@@ -44,6 +49,7 @@ class SessionDBAuth(SessionExpAuth):
             if user_id:
                 user_session = UserSession.get(session_id)
                 user_session.remove()
-                del self.user_id_by_session_id[session_id]
+                if session_id in self.user_id_by_session_id.keys():
+                    del self.user_id_by_session_id[session_id]
                 return True
         return False
